@@ -1,21 +1,11 @@
 import pytest
-import random
-import string
+from helpers.generators import generate_random_email
 from helpers.api_client import APIClient
 
 
-def generate_random_email():
-    random_str = ''.join(random.choices(string.ascii_lowercase, k=6))
-    return f'test_{random_str}@example.com'
-
-
 @pytest.fixture
-def api_client():
-    return APIClient()
-
-
-@pytest.fixture
-def ingredients(api_client):
+def ingredients():
+    api_client = APIClient()
     response = api_client.get_ingredients()
     if response.status_code != 200:
         pytest.fail(f"Failed to get ingredients: {response.json()}")
@@ -23,7 +13,8 @@ def ingredients(api_client):
 
 
 @pytest.fixture
-def registered_user(api_client):
+def registered_user():
+    api_client = APIClient()
     user_data = {
         'email': generate_random_email(),
         'password': 'TestPassword123',
